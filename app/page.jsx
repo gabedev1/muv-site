@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Header from "./components/Header";
+import Header from "../components/Header";
 import styles from "./style/page.module.css";
-import "./globals.css"
+import "./globals.css";
 
 export default function HomePage() {
   return (
