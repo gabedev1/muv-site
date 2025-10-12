@@ -1,8 +1,22 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=BBH+Sans+Bogle&family=Bitcount+Prop+Single+Ink:wght@100..900&family=Fira+Sans&display=swap");
 
 :root {
+  /* as variáveis são definidas automaticamente pela classe adicionada no html */
   --background: #ffffff;
   --foreground: #171717;
+  --bg-1: #06040a;
+  --bg-2: #140026;
+  --accent-1: #8b3be0;
+  --accent-2: #5b2bb0;
+  --muted: rgba(255, 255, 255, 0.75);
+}
+
+/* regras globais opcionais */
+html,
+body {
+  height: 100%;
+  margin: 0;
 }
 
 @theme inline {
@@ -22,5 +36,17 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "BBH Sans Bogle", sans-serif;
+}
+html {
+  font-family: var(--font-fira), system-ui, sans-serif;
+}
+.logo,
+h1 {
+  font-family: var(--font-alfa), serif;
+}
+* {
+  box-shadow: #ededed;
+  transition: box-shadow 0.3s ease-in-out;
+  backdrop-filter: blur(10px);
 }

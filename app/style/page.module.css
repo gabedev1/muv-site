@@ -1,0 +1,204 @@
+.page {
+  min-height: 100vh;
+  background: radial-gradient(
+      800px 400px at 10% 10%,
+      rgba(139, 59, 224, 0.678),
+      transparent 8%
+    ),
+    radial-gradient(
+      600px 300px at 90% 85%,
+      rgba(92, 43, 176, 0.733),
+      transparent 10%
+    ),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 60%, #2a0040 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  font-family: "BBH Sans Bogle", sans-serif;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 110px 20px;
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+  max-width: 980px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: 0 30px 80px rgba(30, 8, 40, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.01);
+  border-radius: 14px;
+  padding: 56px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+
+/* Marca / logo */
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Logo badge */
+.logo {
+  padding: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  height: 64px;
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(91, 43, 176, 0.18);
+}
+
+/* Subtítulo */
+.sub {
+  color: var(--muted);
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+/* Título */
+.title {
+  margin: 6px 0 0 0;
+  font-size: clamp(28px, 5.6vw, 48px);
+  line-height: 1.02;
+  font-weight: 500;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  max-width: 920px;
+}
+
+/* Textos */
+.lead {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.45rem;
+  max-width: 820px;
+  margin-inline: auto;
+}
+
+.description {
+  font-family: "Alfa Slab One", serif;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.98rem;
+  max-width: 800px;
+  margin-inline: auto;
+}
+
+/* Ações */
+.actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+/* CTA principal */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  color: #fff;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 14px 48px rgba(91, 43, 176, 0.26), 0 2px 6px rgba(0, 0, 0, 0.25);
+  transition: transform 160ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    box-shadow 160ms ease, filter 160ms ease;
+  border: 0;
+}
+
+/* Hover CTA */
+.cta:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 22px 70px rgba(91, 43, 176, 0.34);
+  filter: brightness(1.03);
+}
+
+/* Botão secundário */
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.95);
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background-color 140ms ease, transform 140ms ease;
+}
+
+.ghost:hover {
+  background: rgba(255, 255, 255, 0.03);
+  transform: translateY(-2px);
+}
+
+.hint {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.88rem;
+  margin-top: 6px;
+}
+
+/* Responsividade */
+@media (max-width: 960px) {
+  .card {
+    padding: 40px;
+  }
+  .logo {
+    min-width: 56px;
+    height: 56px;
+    font-size: 1.2rem;
+  }
+  .title {
+    font-size: clamp(24px, 7vw, 42px);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 48px 16px;
+  }
+  .card {
+    padding: 28px;
+    border-radius: 12px;
+  }
+  .brand {
+    gap: 10px;
+    flex-direction: column;
+  }
+  .title {
+    text-align: center;
+  }
+  .actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .cta,
+  .ghost {
+    width: 100%;
+    justify-content: center;
+  }
+}

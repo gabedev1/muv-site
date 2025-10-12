@@ -1,0 +1,104 @@
+.muv-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 8px 28px rgba(68, 0, 88, 0.45);
+  transition: background-color 220ms ease, box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+/* área interna centralizada (igual ao estilo do gemini.about) */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* hover no header deixa fundo roxo escuro e sombra mais forte */
+.muv-header:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(36, 0, 50, 0.95),
+    rgba(30, 0, 45, 0.95)
+  );
+  box-shadow: 0 16px 48px rgba(68, 0, 88, 0.85);
+  border-bottom-color: rgba(200, 160, 255, 0.06);
+}
+
+.logo {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  user-select: none;
+}
+
+/* nav abaixo da logo, links lado a lado */
+.navWrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.nav {
+  display: flex;
+  gap: 18px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+/* links do menu */
+.nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: color 160ms ease, background-color 160ms ease,
+    transform 140ms ease;
+}
+
+/* efeito hover dos links -> roxo escuro claro */
+.nav-link:hover {
+  color: #f5e8ff;
+  background: rgba(160, 80, 200, 0.06);
+  transform: translateY(-2px);
+}
+
+/* quando o header está em hover, realça os links também */
+.muv-header:hover .nav-link {
+  color: #f3e8ff;
+}
+
+/* responsividade: em telas pequenas reduz gaps e deixa tudo compacto */
+@media (max-width: 640px) {
+  .container {
+    padding: 10px 14px;
+    gap: 6px;
+  }
+  .logo {
+    font-size: 1.1rem;
+  }
+  .nav {
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .nav-link {
+    padding: 6px 8px;
+    font-size: 0.9rem;
+  }
+}
