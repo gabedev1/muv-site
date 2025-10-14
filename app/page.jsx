@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Header from "../components/Header";
+import Header from "./components/Header";
 import styles from "./style/page.module.css";
 import "./globals.css";
 
@@ -12,7 +12,7 @@ export default function HomePage() {
         <div className={styles.card}>
           <div className={styles.brand}>
             <div className={styles.logo}>MUV</div>
-            <div className={styles.sub}>OtimizAI</div>
+            <div className={styles.sub}>Study AI</div>
           </div>
 
           <h1 className={styles.title}>
@@ -35,7 +35,7 @@ export default function HomePage() {
             <Link href="/chat" className={styles.cta}>
               Conversar com a IA
             </Link>
-            <a href="#sobre" className={styles.ghost}>
+            <a href="/projeto" className={styles.ghost}>
               Saber mais
             </a>
           </div>

@@ -1,128 +1,250 @@
 'use client';
-import React, { useState } from "react";
+
+import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from 'react-markdown';
+import Header from "../components/Header";
 
 export default function ChatPage() {
-  const [input, setInput] = useState("");
-  const [response, setResponse] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+    const [input, setInput] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
     
-    setLoading(true);
-    setError("");
-    setResponse("");
-
-    try {
-      const res = await fetch("/api/gemini", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ 
-          message: input 
-        }),
-      });
-
-      const data = await res.json();
-      console.log("Resposta completa da API:", data);
-
-      if (!res.ok) {
-        throw new Error(data.error || `Erro ${res.status}: ${res.statusText}`);
-      }
-
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      let responseText = "";
-
-      if (data.candidates && data.candidates.length > 0) {
-        responseText = data.candidates[0].content?.parts[0]?.text || "Resposta vazia";
-      } else if (data.contents && data.contents.length > 0) {
-        responseText = data.contents[0].parts[0]?.text || "Resposta vazia";
-      } else {
-        throw new Error("Estrutura da resposta inesperada");
-      }
-
-      if (!responseText || responseText === "Resposta vazia") {
-        throw new Error("A API retornou uma resposta vazia");
-      }
-
-      setResponse(responseText);
-
-    } catch (err) {
-      console.error("Erro detalhado:", err);
-      setError(err.message || "Erro ao conectar com a API");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">
-        Assistente de Estudos com IA
-      </h1>
+    const messagesEndRef = useRef(null);
+  
+    // Rolagem automática para a última mensagem
+    const scrollToBottom = () => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+  
+    useEffect(() => {
+      scrollToBottom();
+    }, [messages]);
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (!input.trim() || loading) return;
       
-      <form onSubmit={handleSubmit} className="mb-6">
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Digite sua pergunta sobre estudos... Exemplo: 'Explique o que é fotossíntese'"
-          rows="4"
-          className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-          disabled={loading}
-        />
+      const userMessage = input.trim();
+      setInput("");
+      setLoading(true);
+      setError("");
+  
+      // Adiciona mensagem do usuário
+      setMessages(prev => [...prev, {
+        id: Date.now(),
+        role: "user",
+        content: userMessage,
+        timestamp: new Date().toLocaleTimeString()
+      }]);
+  
+      try {
+        const res = await fetch("/api/gemini", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ 
+            message: userMessage,
+            // Envia o histórico se quiser contexto (opcional)
+            history: messages.filter(m => m.role === "user" || m.role === "assistant").slice(-4)
+          }),
+        });
+  
+        const data = await res.json();
+  
+        if (!res.ok) {
+          throw new Error(data.error || `Erro ${res.status}`);
+        }
+  
+        if (data.error) {
+          throw new Error(data.error);
+        }
+  
+        let responseText = "";
+  
+        if (data.candidates && data.candidates.length > 0) {
+          responseText = data.candidates[0].content?.parts[0]?.text || "Resposta vazia";
+        } else if (data.contents && data.contents.length > 0) {
+          responseText = data.contents[0].parts[0]?.text || "Resposta vazia";
+        } else {
+          throw new Error("Estrutura da resposta inesperada");
+        }
+  
+        if (!responseText || responseText === "Resposta vazia") {
+          throw new Error("A API retornou uma resposta vazia");
+        }
+  
+        // Adiciona resposta da IA
+        setMessages(prev => [...prev, {
+          id: Date.now() + 1,
+          role: "assistant",
+          content: responseText,
+          timestamp: new Date().toLocaleTimeString()
+        }]);
+  
+      } catch (err) {
+        console.error("Erro:", err);
+        setError(err.message || "Erro ao conectar com a API");
         
-        <button 
-          type="submit" 
-          disabled={loading || !input.trim()}
-          className="mt-3 w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition duration-200"
-        >
-          {loading ? "🔄 Processando..." : "📤 Enviar Pergunta"}
-        </button>
-      </form>
+        // Adiciona mensagem de erro ao histórico
+        setMessages(prev => [...prev, {
+          id: Date.now() + 1,
+          role: "error",
+          content: `Erro: ${err.message}`,
+          timestamp: new Date().toLocaleTimeString()
+        }]);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    const clearChat = () => {
+      setMessages([]);
+      setError("");
+    };
+  
+    return (
 
-      {error && (
-        <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg mb-4">
-          <strong>❌ Erro:</strong> {error}
-        </div>
-      )}
-
-      {response && (
-        <div className="p-6 bg-black border border-gray-200 rounded-lg shadow-sm">
-          <h3 className="font-bold text-xl mb-4 text-purple-800 border-b pb-2">
-            💡 Resposta:
-          </h3>
-          <div className="prose prose-lg max-w-none">
-            <ReactMarkdown
-              components={{
-                // Personalização dos componentes Markdown
-                h1: ({node, ...props}) => <h1 className="text-2xl font-bold mt-6 mb-4 text-purple-900" {...props} />,
-                h2: ({node, ...props}) => <h2 className="text-xl font-bold mt-5 mb-3 text-purple-800" {...props} />,
-                h3: ({node, ...props}) => <h3 className="text-lg font-bold mt-4 mb-2 text-purple-700" {...props} />,
-                p: ({node, ...props}) => <p className="mb-4 text-white-700 leading-relaxed" {...props} />,
-                ul: ({node, ...props}) => <ul className="list-disc list-inside mb-4 space-y-1" {...props} />,
-                ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-4 space-y-1" {...props} />,
-                li: ({node, ...props}) => <li className="text-white-700" {...props} />,
-                strong: ({node, ...props}) => <strong className="font-bold text-purple-900" {...props} />,
-                em: ({node, ...props}) => <em className="italic text-purple-800" {...props} />,
-                code: ({node, inline, ...props}) => 
-                  inline 
-                    ? <code className="bg-black-100 px-1 py-0.5 rounded text-sm font-mono text-white-600" {...props} />
-                    : <code className="block bg-black-100 p-3 rounded text-sm font-mono text-purple-800 overflow-x-auto my-2" {...props} />,
-                blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-blue-500 pl-4 italic text-white-600 my-4" {...props} />,
-              }}
+      <div className="max-w-4xl mx-auto p-4 h-screen flex flex-col">
+        {/* Header */}
+        <Header />
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-3xl font-bold text-purple-800">
+            Assistente de Estudos com IA
+          </h1>
+          {messages.length > 0 && (
+            <button
+              onClick={clearChat}
+              className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-black-600 transition duration-200"
             >
-              {response}
-            </ReactMarkdown>
-          </div>
+              🗑️ Limpar Chat
+            </button>
+          )}
         </div>
-      )}
-    </div>
-  );
-}
+  
+        {/* Área de Mensagens */}
+        <div className="flex-1 overflow-y-auto mb-4 border border-gray-400 rounded-lg p-4 bg-black-50">
+          {messages.length === 0 ? (
+            <div className="text-center text-purple-900 mt-8">
+              <div className="text-6xl mb-4">🎓</div>
+              <h2 className="text-xl font-semibold mb-2">Bem-vindo ao Assistente de Estudos!</h2>
+              <p>Faça uma pergunta sobre qualquer matéria e eu ajudarei você.</p>
+              <p className="text-sm mt-2">Exemplo: "Explique o que é fotossíntese"</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${
+                    message.role === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`max-w-[80%] rounded-lg p-4 ${
+                      message.role === "user"
+                        ? "bg-purple-800 text-white-100 "
+                        : message.role === "error"
+                        ? "bg-red-100 border border-red-300 text-red-700"
+                        : "bg-black border border-gray-200 shadow-sm"
+                    }`}
+                  >
+                    <div className="flex items-center mb-2">
+                      <span className="text-sm font-semibold">
+                        {message.role === "user" ? "👤 Você" : 
+                         message.role === "error" ? "❌ Erro" : "🤖 Assistente"}
+                      </span>
+                      <span className="text-xs ml-2 opacity-70">
+                        {message.timestamp}
+                      </span>
+                    </div>
+                    
+                    {message.role === "assistant" ? (
+                      <div className="prose prose-sm max-w-none">
+                        <ReactMarkdown
+                          components={{
+                            h1: ({node, ...props}) => <h1 className="text-gray-500 text-lg font-bold mt-3 mb-2" {...props} />,
+                            h2: ({node, ...props}) => <h2 className="text-md font-bold mt-2 mb-1" {...props} />,
+                            h3: ({node, ...props}) => <h3 className="text-sm font-bold mt-2 mb-1" {...props} />,
+                            p: ({node, ...props}) => <p className="mb-2 leading-relaxed" {...props} />,
+                            ul: ({node, ...props}) => <ul className="list-disc list-inside mb-2 space-y-1" {...props} />,
+                            ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-2 space-y-1" {...props} />,
+                            li: ({node, ...props}) => <li className="text-purple-700" {...props} />,
+                            strong: ({node, ...props}) => <strong className="font-bold" {...props} />,
+                            em: ({node, ...props}) => <em className="italic" {...props} />,
+                            code: ({node, inline, ...props}) => 
+                              inline 
+                                ? <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono" {...props} />
+                                : <code className="block bg-gray-100 p-2 rounded text-xs font-mono overflow-x-auto my-1" {...props} />,
+                            blockquote: ({node, ...props}) => <blockquote className="bg-gray-100 border-l-4 border-blue-500 pl-3 italic text-purple-600 my-2" {...props} />,
+                          }}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                      </div>
+                    ) : (
+                      <p className="whitespace-pre-wrap">{message.content}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+              
+              {loading && (
+                <div className="flex justify-start">
+                  <div className="bg-black border border-gray-200 rounded-lg p-4 max-w-[80%]">
+                    <div className="flex items-center">
+                      <div className="animate-pulse flex space-x-2">
+                        <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
+                        <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
+                        <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
+                      </div>
+                      <span className="ml-2 text-sm text-gray-500">Digitando...</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div ref={messagesEndRef} />
+            </div>
+          )}
+        </div>
+  
+        {/* Formulário de Input */}
+        <form onSubmit={handleSubmit} className="border-t pt-4">
+          <div className="flex space-x-2">
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Digite sua pergunta sobre estudos..."
+              rows="2"
+              className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              disabled={loading}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
+            />
+            <button 
+              type="submit" 
+              disabled={loading || !input.trim()}
+              className="px-6 bg-blue-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition duration-200 self-end"
+            >
+              {loading ? "⏳" : "📤"}
+            </button>
+          </div>
+          <p className="text-xs text-black-500 mt-1">
+            Pressione Enter para enviar, Shift+Enter para nova linha
+          </p>
+        </form>
+  
+        {error && !loading && (
+          <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg mt-2">
+            <strong>❌ Erro:</strong> {error}
+          </div>
+        )}
+      </div>
+    );
+  }
