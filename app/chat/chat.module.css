@@ -1,0 +1,132 @@
+/* Background wrapper: substitua /images/chat-bg.jpg por o caminho da sua imagem em /public */
+.chatWrap {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  z-index: 10;
+  background-image: url("/aluno-rodeado-pela-ia.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* escurece o fundo para legibilidade */
+.chatWrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 6, 12, 0.6),
+    rgba(16, 8, 30, 0.6)
+  );
+  backdrop-filter: blur(4px);
+  z-index: -1;
+}
+
+/* área principal com glassmorphism */
+.messagesArea {
+  width: 800px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 12px 40px rgba(20, 6, 40, 0.6);
+  border-radius: 12px;
+  padding: 18px;
+  overflow-y: auto;
+  backdrop-filter: blur(6px);
+}
+
+/* custom scrollbar */
+.messagesArea::-webkit-scrollbar {
+  width: 10px;
+}
+.messagesArea::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    rgba(139, 59, 224, 0.2),
+    rgba(91, 43, 176, 0.2)
+  );
+  border-radius: 999px;
+}
+
+/* bolhas de mensagem */
+.msg {
+  max-width: 80%;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* usuário (direita) */
+.msg.user {
+  background: linear-gradient(
+    90deg,
+    rgba(139, 59, 224, 0.95),
+    rgba(91, 43, 176, 0.95)
+  );
+  color: #fff;
+  margin-left: auto;
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 8px 24px rgba(91, 43, 176, 0.18);
+}
+
+/* assistente (esquerda) */
+.msg.assistant {
+  background: rgba(0, 0, 0, 0.6);
+  color: #e9e6ff;
+  border: 1px solid rgba(176, 0, 195, 0.297);
+  box-shadow: 0 6px 20px rgba(8, 6, 20, 0.6);
+  margin-right: auto;
+  border-bottom-left-radius: 6px;
+}
+
+/* erro */
+.msg.error {
+  background: rgba(255, 230, 230, 0.9);
+  color: #8b1c1c;
+  border: 1px solid rgba(160, 40, 40, 0.15);
+}
+
+/* textarea e botão */
+.textarea {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #fff;
+  min-height: 56px;
+}
+.textarea:focus {
+  outline: none;
+  box-shadow: 0 6px 18px rgba(91, 43, 176, 0.18);
+  border-color: rgba(139, 59, 224, 0.8);
+}
+
+/* botão enviar */
+.sendButton {
+  background: linear-gradient(90deg, #8b3be0, #5b2bb0);
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  box-shadow: 0 10px 30px rgba(91, 43, 176, 0.24);
+}
+.sendButton:hover {
+  transform: translateY(-2px);
+}
+
+/* responsividade */
+@media (max-width: 880px) {
+  .chatWrap {
+    padding: 18px;
+  }
+  .messagesArea {
+    max-height: calc(100vh - 260px);
+  }
+}

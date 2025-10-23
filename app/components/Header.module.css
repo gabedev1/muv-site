@@ -12,47 +12,54 @@
     border-color 220ms ease;
 }
 
-/* área interna centralizada (igual ao estilo do gemini.about) */
+/* container agora em linha com contexto relativo para centralizar nav */
 .container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 14px 20px;
+  padding: 12px 20px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  position: relative;
+  gap: 12px;
 }
 
-/* hover no header deixa fundo roxo escuro e sombra mais forte */
-.muv-header:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(36, 0, 50, 0.95),
-    rgba(30, 0, 45, 0.95)
-  );
-  box-shadow: 0 16px 48px rgba(68, 0, 88, 0.85);
-  border-bottom-color: rgba(200, 160, 255, 0.06);
-}
-
-.logo {
-  margin: 0;
-  color: #ffffff;
-  font-size: 1.4rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  user-select: none;
-}
-
-/* nav abaixo da logo, links lado a lado */
-.navWrap {
-  width: 100%;
+/* esquerda: logo */
+.left {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: 12px;
 }
 
+.logoLink {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+.logoImg {
+  height: 40px;
+  width: auto;
+  display: block;
+  user-select: none;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+/* nav centralizado via posicionamento absoluto para garantir centro real */
+.centerNav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  transform-origin: center;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+
+/* nav lista (links lado a lado) */
 .nav {
   display: flex;
-  gap: 18px;
+  gap: 20px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -65,40 +72,75 @@
   text-decoration: none;
   font-weight: 600;
   font-size: 0.95rem;
-  padding: 8px 10px;
+  padding: 8px 12px;
   border-radius: 8px;
   transition: color 160ms ease, background-color 160ms ease,
     transform 140ms ease;
 }
 
-/* efeito hover dos links -> roxo escuro claro */
+/* estado ativo */
+.active {
+  background: rgba(139, 59, 224, 0.12);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(91, 43, 176, 0.08);
+}
+
+/* hover dos links */
 .nav-link:hover {
   color: #f5e8ff;
   background: rgba(160, 80, 200, 0.06);
   transform: translateY(-2px);
 }
 
-/* quando o header está em hover, realça os links também */
-.muv-header:hover .nav-link {
-  color: #f3e8ff;
+/* direita: redes sociais */
+.right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
-/* responsividade: em telas pequenas reduz gaps e deixa tudo compacto */
-@media (max-width: 640px) {
-  .container {
-    padding: 10px 14px;
-    gap: 6px;
+.social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.9);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  transition: background 150ms ease, transform 120ms ease;
+  text-decoration: none;
+}
+
+.social:hover {
+  background: rgba(160, 80, 200, 0.06);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+/* responsividade: em telas pequenas o nav passa a flow normal (sem absolute) */
+@media (max-width: 840px) {
+  .centerNav {
+    position: static;
+    transform: none;
+    margin-left: 8px;
+    order: 3;
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
-  .logo {
-    font-size: 1.1rem;
+  .container {
+    gap: 8px;
+    padding: 10px 14px;
+  }
+  .logoImg {
+    height: 34px;
   }
   .nav {
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
     justify-content: center;
   }
-  .nav-link {
-    padding: 6px 8px;
-    font-size: 0.9rem;
+  .right {
+    gap: 8px;
   }
 }
