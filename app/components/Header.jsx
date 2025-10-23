@@ -58,7 +58,7 @@ export default function Header() {
         {/* right: redes sociais */}
         <div className={styles.right}>
           <a
-            href="https://www.instagram.com/gabriells.v/"
+            href="https://www.instagram.com/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
