@@ -6,10 +6,10 @@ import styles from "./sobre.module.css";
 
 export default function Sobre() {
   const integrantes = [
-    { nome: "João Gabriel", nota: "Líder do projeto" },
-    { nome: "Ana Vitória", nota: "Especialista em UX e protótipos" },
-    { nome: "Pedro Vitor", nota: "Responsável pela integração com IA" },
-    { nome: "Valdinar Filho", nota: "Desenvolvimento e demonstração" },
+    { nome: "João Gabriel", nota: "Desenvolvedor Geral e Gerenciador da API" },
+    { nome: "Ana Vitória", nota: "Idealizadora do Projeto" },
+    { nome: "Pedro Vitor", nota: "Responsável pelo UX e UI" },
+    { nome: "Valdinar Filho", nota: "Responsável pelo Design" },
   ];
 
   return (

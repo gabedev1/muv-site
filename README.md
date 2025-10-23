@@ -88,5 +88,3 @@ Deploy recomendado: Vercel (suporte nativo a Next.js). Configure variáveis de a
 ## Licença & Créditos
 
 Projeto criado para demonstração do grupo (feira de ciências). Use e modifique conforme necessidade — adicione uma licença no repositório quando desejar compartilhar publicamente.
-
-Se quiser, atualizo o README com instruções específicas sobre a integração do backend/rota de chat que você estiver usando (ex.: exemplo de API route para OpenAI).
