@@ -12,8 +12,8 @@ export default function ChatPage() {
   const [error, setError] = useState("");
 
   const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null);
 
-  // Rolagem automática para a última mensagem
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -21,6 +21,16 @@ export default function ChatPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = Math.min(
+        textareaRef.current.scrollHeight,
+        120
+      ) + "px";
+    }
+  }, [input]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,14 +41,16 @@ export default function ChatPage() {
     setLoading(true);
     setError("");
 
-    // Adiciona mensagem do usuário
     setMessages((prev) => [
       ...prev,
       {
         id: Date.now(),
         role: "user",
         content: userMessage,
-        timestamp: new Date().toLocaleTimeString(),
+        timestamp: new Date().toLocaleTimeString("pt-BR", { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        }),
       },
     ]);
 
@@ -50,7 +62,6 @@ export default function ChatPage() {
         },
         body: JSON.stringify({
           message: userMessage,
-          // Envia o histórico se quiser contexto (opcional)
           history: messages
             .filter((m) => m.role === "user" || m.role === "assistant")
             .slice(-4),
@@ -67,13 +78,10 @@ export default function ChatPage() {
         throw new Error(data.error);
       }
 
-      // O servidor agora retorna { text, raw } — aceitar esse formato
       let responseText = "";
-      // Se o servidor já retorna text use-o
       if (data.text) {
         responseText = data.text;
       } else {
-        // auxiliar para juntar parts em uma única string
         const joinParts = (entry) => {
           const parts = entry?.parts || [];
           return parts.map((p) => p.text || "").join("");
@@ -102,28 +110,32 @@ export default function ChatPage() {
         throw new Error("A API retornou uma resposta vazia ou inesperada");
       }
 
-      // Adiciona resposta da IA
       setMessages((prev) => [
         ...prev,
         {
           id: Date.now() + 1,
           role: "assistant",
           content: responseText,
-          timestamp: new Date().toLocaleTimeString(),
+          timestamp: new Date().toLocaleTimeString("pt-BR", { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          }),
         },
       ]);
     } catch (err) {
       console.error("Erro:", err);
       setError(err.message || "Erro ao conectar com a API");
 
-      // Adiciona mensagem de erro ao histórico
       setMessages((prev) => [
         ...prev,
         {
           id: Date.now() + 1,
           role: "error",
           content: `Erro: ${err.message}`,
-          timestamp: new Date().toLocaleTimeString(),
+          timestamp: new Date().toLocaleTimeString("pt-BR", { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          }),
         },
       ]);
     } finally {
@@ -138,42 +150,52 @@ export default function ChatPage() {
 
   return (
     <div className={styles.chatWrap}>
-      {/* Header */}
-      <Header />
-      <div className="max-w-4xl mx-auto p-4 h-screen flex flex-col pt-20">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-500 text-purple-600 mt-6 mb-6">
-            Assistente de Estudos com IA
-          </h1>
+      {/* Header fixo no topo */}
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <Header />
+      </div>
+      
+      {/* Conteúdo principal com padding para o header */}
+      <div className="w-full max-w-4xl mx-auto h-screen flex flex-col pt-20 px-4 sm:px-6 lg:px-8">
+        
+        {/* Título e botão limpar */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mb-6">
+          <div className="text-center sm:text-left">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl text-purple-900 mb-2">
+              Assistente de Estudos com IA
+            </h1>
+            <p className="text-white/80 text-sm sm:text-base">
+              Faça perguntas sobre qualquer matéria e receba ajuda instantânea
+            </p>
+          </div>
+          
           {messages.length > 0 && (
             <button
               onClick={clearChat}
-              className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-black-600 transition duration-200"
+              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition duration-200 text-sm font-medium whitespace-nowrap shadow-lg"
             >
               🗑️ Limpar Chat
             </button>
           )}
         </div>
 
-        {/* Área de Mensagens */}
-        <div
-          className={`${styles.messagesArea} flex-1 overflow-y-auto mb-4 border border-gray-400 rounded-lg p-4`}
-        >
+        {/* Área de Mensagens - Ocupa espaço restante */}
+        <div className={`${styles.messagesArea} flex-1 mb-4 rounded-xl shadow-2xl`}>
           {messages.length === 0 ? (
-            <div className="text-center text-purple-900 mt-8">
-              <div className="text-6xl mb-4 pt-5">🎓</div>
-              <h2 className="text-xl font-semibold mb-2">
+            <div className="h-full flex flex-col items-center justify-center text-white text-center p-8">
+              <div className="text-6xl mb-6">🎓</div>
+              <h2 className="text-purple-700 text-2xl font-bold mb-4">
                 Bem-vindo ao Assistente de Estudos!
               </h2>
-              <p>
+              <p className="text-lg mb-2 text-purple-500">
                 Faça uma pergunta sobre qualquer matéria e eu ajudarei você.
               </p>
-              <p className="text-sm mt-2 pb-8">
+              <p className="text-purple-500 italic">
                 Exemplo: "Explique o que é fotossíntese"
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="p-4 space-y-4">
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -182,15 +204,15 @@ export default function ChatPage() {
                   }`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-lg p-4 ${
+                    className={`${styles.msg} ${
                       message.role === "user"
-                        ? "bg-purple-800 text-white-100 "
+                        ? styles.user
                         : message.role === "error"
-                        ? "bg-red-100 border border-red-300 text-red-700"
-                        : "bg-black border border-gray-200 shadow-sm"
-                    }`}
+                        ? styles.error
+                        : styles.assistant
+                    } max-w-[85%] sm:max-w-[75%] lg:max-w-[65%]`}
                   >
-                    <div className="flex items-center mb-2">
+                    <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-semibold">
                         {message.role === "user"
                           ? "👤 Você"
@@ -198,7 +220,7 @@ export default function ChatPage() {
                           ? "❌ Erro"
                           : "🤖 Assistente"}
                       </span>
-                      <span className="text-xs ml-2 opacity-70">
+                      <span className="text-xs opacity-70">
                         {message.timestamp}
                       </span>
                     </div>
@@ -209,61 +231,61 @@ export default function ChatPage() {
                           components={{
                             h1: ({ node, ...props }) => (
                               <h1
-                                className="text-gray-500 text-lg font-bold mt-3 mb-2"
+                                className="text-white/80 text-lg font-bold mt-3 mb-2"
                                 {...props}
                               />
                             ),
                             h2: ({ node, ...props }) => (
                               <h2
-                                className="text-md font-bold mt-2 mb-1"
+                                className="text-white/90 text-md font-bold mt-2 mb-1"
                                 {...props}
                               />
                             ),
                             h3: ({ node, ...props }) => (
                               <h3
-                                className="text-sm font-bold mt-2 mb-1"
+                                className="text-white text-sm font-bold mt-2 mb-1"
                                 {...props}
                               />
                             ),
                             p: ({ node, ...props }) => (
-                              <p className="mb-2 leading-relaxed" {...props} />
+                              <p className="mb-2 leading-relaxed text-white/90" {...props} />
                             ),
                             ul: ({ node, ...props }) => (
                               <ul
-                                className="list-disc list-inside mb-2 space-y-1"
+                                className="list-disc list-inside mb-2 space-y-1 text-white/90"
                                 {...props}
                               />
                             ),
                             ol: ({ node, ...props }) => (
                               <ol
-                                className="list-decimal list-inside mb-2 space-y-1"
+                                className="list-decimal list-inside mb-2 space-y-1 text-white/90"
                                 {...props}
                               />
                             ),
                             li: ({ node, ...props }) => (
-                              <li className="text-purple-700" {...props} />
+                              <li className="text-white-200" {...props} />
                             ),
                             strong: ({ node, ...props }) => (
-                              <strong className="font-bold" {...props} />
+                              <strong className="font-bold text-purple-800" {...props} />
                             ),
                             em: ({ node, ...props }) => (
-                              <em className="italic" {...props} />
+                              <em className="italic text-white-200" {...props} />
                             ),
                             code: ({ node, inline, ...props }) =>
                               inline ? (
                                 <code
-                                  className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono"
+                                  className="bg-purple-400 px-1 py-0.5 rounded text-xs font-mono text-white"
                                   {...props}
                                 />
                               ) : (
                                 <code
-                                  className="block bg-gray-100 p-2 rounded text-xs font-mono overflow-x-auto my-1"
+                                  className="block bg-purple-500 p-2 rounded text-xs font-mono text-white overflow-x-auto my-2"
                                   {...props}
                                 />
                               ),
                             blockquote: ({ node, ...props }) => (
                               <blockquote
-                                className="bg-gray-100 border-l-4 border-blue-500 pl-3 italic text-purple-600 my-2"
+                                className="bg-black-10 border-l-4 border-purple-400 pl-3 italic text-purple-500 my-2 py-1"
                                 {...props}
                               />
                             ),
@@ -273,7 +295,7 @@ export default function ChatPage() {
                         </ReactMarkdown>
                       </div>
                     ) : (
-                      <p className="whitespace-pre-wrap">{message.content}</p>
+                      <p className="whitespace-pre-wrap text-white-400">{message.content}</p>
                     )}
                   </div>
                 </div>
@@ -281,15 +303,15 @@ export default function ChatPage() {
 
               {loading && (
                 <div className="flex justify-start">
-                  <div className="bg-black border border-gray-200 rounded-lg p-4 max-w-[80%]">
-                    <div className="flex items-center">
-                      <div className="animate-pulse flex space-x-2">
-                        <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-                        <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-                        <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
+                  <div className={`${styles.msg} ${styles.assistant} max-w-[85%] sm:max-w-[75%]`}>
+                    <div className="flex items-center space-x-2">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-white-60 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-white-60 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                        <div className="w-2 h-2 bg-white-60 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
                       </div>
-                      <span className="ml-2 text-sm text-gray-700">
-                        Digitando...
+                      <span className="text-purple-600">
+                        Assistente está digitando...
                       </span>
                     </div>
                   </div>
@@ -301,38 +323,47 @@ export default function ChatPage() {
           )}
         </div>
 
-        {/* Formulário de Input */}
-        <form onSubmit={handleSubmit} className="border-t pt-4">
-          <div className="flex space-x-2">
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Digite sua pergunta sobre estudos..."
-              rows="3"
-              className={`${styles.textarea} flex-1 p-2 border rounded-lg focus:outline-none resize-none`}
-              disabled={loading}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSubmit(e);
-                }
-              }}
-            />
-            <button
-              type="submit"
-              disabled={loading || !input.trim()}
-              className={`${styles.sendButton} px-6 rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition duration-200 self-end`}
-            >
-              {loading ? "⏳" : "📤"}
-            </button>
-          </div>
-          <p className="text-xs text-black-500 mt-1">
-            Pressione Enter para enviar, Shift+Enter para nova linha
-          </p>
-        </form>
+        {/* Área de Input */}
+        <div className="bg-white-100 backdrop-blur-lg rounded-xl p-4 shadow-2xl border border-white/20">
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1">
+                <textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Digite sua pergunta sobre estudos..."
+                  rows="2"
+                  className={`${styles.textarea} w-full p-3 rounded-lg resize-none text-white placeholder-white text-base`}
+                  disabled={loading}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSubmit(e);
+                    }
+                  }}
+                />
+                <p className="text-white text-xs mt-2">
+                  Pressione Enter para enviar, Shift+Enter para nova linha
+                </p>
+              </div>
+              <button
+                type="submit"
+                disabled={loading || !input.trim()}
+                className={`${styles.sendButton} px-6 py-3 rounded-lg disabled:bg-gray-10 disabled:cursor-not-allowed font-semibold transition-all duration-200 text-base min-w-[80px] flex items-center justify-center`}
+              >
+                {loading ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                ) : (
+                  "Enviar"
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
 
         {error && !loading && (
-          <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg mt-2">
+          <div className="mt-4 p-3 bg-red-500/20 border border-red-400 text-white rounded-lg text-sm backdrop-blur-lg">
             <strong>❌ Erro:</strong> {error}
           </div>
         )}

@@ -2,14 +2,14 @@
   position: fixed;
   inset: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
+  flex-direction: column;
+  padding: 0;
   z-index: 10;
   background-image: url("/aluno-rodeado-pela-ia.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /* escurece o fundo para legibilidade */
@@ -19,8 +19,8 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(8, 6, 12, 0.6),
-    rgba(16, 8, 30, 0.6)
+    rgba(8, 6, 12, 0.8),
+    rgba(16, 8, 30, 0.9)
   );
   backdrop-filter: blur(4px);
   z-index: -1;
@@ -28,104 +28,183 @@
 
 /* área principal com glassmorphism */
 .messagesArea {
-  width: 800px;
+  width: 100%;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.02),
-    rgba(255, 255, 255, 0.01)
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.02)
   );
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  box-shadow: 0 12px 40px rgba(20, 6, 40, 0.6);
-  border-radius: 12px;
-  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(20, 6, 40, 0.8);
+  border-radius: 16px;
   overflow-y: auto;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(10px);
+  min-height: 300px;
 }
 
 /* custom scrollbar */
 .messagesArea::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 .messagesArea::-webkit-scrollbar-thumb {
   background: linear-gradient(
     180deg,
-    rgba(139, 59, 224, 0.2),
-    rgba(91, 43, 176, 0.2)
+    rgba(139, 59, 224, 0.4),
+    rgba(91, 43, 176, 0.4)
   );
-  border-radius: 999px;
+  border-radius: 10px;
+}
+.messagesArea::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
 }
 
 /* bolhas de mensagem */
 .msg {
   max-width: 80%;
-  padding: 12px;
-  border-radius: 12px;
-  margin-bottom: 10px;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 16px;
   word-break: break-word;
-  line-height: 1.4;
+  line-height: 1.5;
+  backdrop-filter: blur(10px);
 }
 
 /* usuário (direita) */
 .msg.user {
   background: linear-gradient(
-    90deg,
-    rgba(139, 59, 224, 0.95),
-    rgba(91, 43, 176, 0.95)
+    135deg,
+    rgba(139, 59, 224, 0.9),
+    rgba(91, 43, 176, 0.9)
   );
   color: #fff;
   margin-left: auto;
   border-bottom-right-radius: 6px;
-  box-shadow: 0 8px 24px rgba(91, 43, 176, 0.18);
+  box-shadow: 0 8px 32px rgba(91, 43, 176, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* assistente (esquerda) */
 .msg.assistant {
-  background: rgba(0, 0, 0, 0.6);
-  color: #e9e6ff;
-  border: 1px solid rgba(176, 0, 195, 0.297);
-  box-shadow: 0 6px 20px rgba(8, 6, 20, 0.6);
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(8, 6, 20, 0.4);
   margin-right: auto;
   border-bottom-left-radius: 6px;
+  backdrop-filter: blur(10px);
 }
 
 /* erro */
 .msg.error {
-  background: rgba(255, 230, 230, 0.9);
-  color: #8b1c1c;
-  border: 1px solid rgba(160, 40, 40, 0.15);
+  background: rgba(239, 68, 68, 0.2);
+  color: #fff;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  backdrop-filter: blur(10px);
 }
 
 /* textarea e botão */
 .textarea {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #fff;
-  min-height: 56px;
+  border-radius: 12px;
+  resize: none;
+  font-family: inherit;
+  transition: all 0.3s ease;
 }
+
+.textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 .textarea:focus {
   outline: none;
-  box-shadow: 0 6px 18px rgba(91, 43, 176, 0.18);
-  border-color: rgba(139, 59, 224, 0.8);
+  box-shadow: 0 0 0 3px rgba(139, 59, 224, 0.3);
+  border-color: rgba(139, 59, 224, 0.6);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 /* botão enviar */
 .sendButton {
-  background: linear-gradient(90deg, #8b3be0, #5b2bb0);
+  background: linear-gradient(135deg, #8b3be0, #5b2bb0);
   color: #fff;
-  padding: 10px 18px;
   border: none;
-  box-shadow: 0 10px 30px rgba(91, 43, 176, 0.24);
-}
-.sendButton:hover {
-  transform: translateY(-2px);
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 8px 32px rgba(91, 43, 176, 0.4);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
-/* responsividade */
-@media (max-width: 880px) {
+.sendButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(91, 43, 176, 0.6);
+}
+
+.sendButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Responsividade Mobile */
+@media (max-width: 768px) {
   .chatWrap {
-    padding: 18px;
+    background-attachment: scroll;
   }
+  
   .messagesArea {
-    max-height: calc(100vh - 260px);
+    border-radius: 12px;
+    max-height: 50vh !important;
+  }
+  
+  .msg {
+    max-width: 90% !important;
+    padding: 12px;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  
+  .msg.user {
+    border-bottom-right-radius: 4px;
+  }
+  
+  .msg.assistant {
+    border-bottom-left-radius: 4px;
+  }
+  
+  .textarea {
+    font-size: 16px; /* Melhor para iOS */
+    min-height: 60px;
+  }
+}
+
+/* Mobile Pequeno */
+@media (max-width: 480px) {
+  .messagesArea {
+    border-radius: 10px;
+    max-height: 45vh !important;
+  }
+  
+  .msg {
+    max-width: 95% !important;
+    padding: 10px;
+    font-size: 13px;
+  }
+  
+  .textarea {
+    font-size: 16px;
+    min-height: 55px;
+  }
+}
+
+/* Orientação Landscape Mobile */
+@media (max-height: 600px) and (max-width: 768px) {
+  .messagesArea {
+    max-height: 40vh !important;
+  }
+  
+  .msg {
+    margin-bottom: 8px;
+    padding: 8px 10px;
   }
 }
