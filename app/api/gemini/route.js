@@ -44,6 +44,11 @@ Pergunta: ${message}`;
 
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
+    const maxTokens = parseInt(
+      process.env.GEMINI_MAX_OUTPUT_TOKENS || "2048",
+      10
+    );
+
     const resp = await fetch(apiUrl, {
       method: "POST",
       headers: {
@@ -57,7 +62,8 @@ Pergunta: ${message}`;
         ],
         generationConfig: {
           temperature: 0.7,
-          maxOutputTokens: 1024,
+          maxOutputTokens: maxTokens,
+          candidateCount: 1,
         },
       }),
     });
@@ -73,11 +79,20 @@ Pergunta: ${message}`;
     }
 
     // Extrair texto principal da resposta (suporta diferentes formatos)
+    // Extrair e unir todas as partes de texto (parts) para garantir resposta completa
+    const joinPartsText = (entry) => {
+      const parts = entry?.parts;
+      if (!parts) return "";
+      return parts.map((p) => p.text || "").join("");
+    };
+
     let responseText = "";
     if (data.candidates && data.candidates.length > 0) {
-      responseText = data.candidates[0].content?.parts?.[0]?.text || "";
+      responseText = joinPartsText(
+        data.candidates[0].content || data.candidates[0]
+      );
     } else if (data.contents && data.contents.length > 0) {
-      responseText = data.contents[0].parts?.[0]?.text || "";
+      responseText = joinPartsText(data.contents[0]);
     }
 
     // Retorna apenas o texto para o cliente (mais simples)

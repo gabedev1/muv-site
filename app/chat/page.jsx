@@ -69,18 +69,32 @@ export default function ChatPage() {
 
       // O servidor agora retorna { text, raw } — aceitar esse formato
       let responseText = "";
+      // Se o servidor já retorna text use-o
       if (data.text) {
         responseText = data.text;
-      } else if (data.candidates && data.candidates.length > 0) {
-        responseText = data.candidates[0].content?.parts?.[0]?.text || "";
-      } else if (data.contents && data.contents.length > 0) {
-        responseText = data.contents[0].parts?.[0]?.text || "";
-      } else if (data.raw) {
-        // tentar extrair do raw quando presente
-        if (data.raw.candidates && data.raw.candidates.length > 0) {
-          responseText = data.raw.candidates[0].content?.parts?.[0]?.text || "";
-        } else if (data.raw.contents && data.raw.contents.length > 0) {
-          responseText = data.raw.contents[0].parts?.[0]?.text || "";
+      } else {
+        // auxiliar para juntar parts em uma única string
+        const joinParts = (entry) => {
+          const parts = entry?.parts || [];
+          return parts.map((p) => p.text || "").join("");
+        };
+
+        if (data.candidates && data.candidates.length > 0) {
+          const candidate = data.candidates[0];
+          responseText = candidate.content
+            ? joinParts(candidate.content)
+            : joinParts(candidate);
+        } else if (data.contents && data.contents.length > 0) {
+          responseText = joinParts(data.contents[0]);
+        } else if (data.raw) {
+          if (data.raw.candidates && data.raw.candidates.length > 0) {
+            const candidate = data.raw.candidates[0];
+            responseText = candidate.content
+              ? joinParts(candidate.content)
+              : joinParts(candidate);
+          } else if (data.raw.contents && data.raw.contents.length > 0) {
+            responseText = joinParts(data.raw.contents[0]);
+          }
         }
       }
 
