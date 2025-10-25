@@ -67,19 +67,25 @@ export default function ChatPage() {
         throw new Error(data.error);
       }
 
+      // O servidor agora retorna { text, raw } — aceitar esse formato
       let responseText = "";
-
-      if (data.candidates && data.candidates.length > 0) {
-        responseText =
-          data.candidates[0].content?.parts[0]?.text || "Resposta vazia";
+      if (data.text) {
+        responseText = data.text;
+      } else if (data.candidates && data.candidates.length > 0) {
+        responseText = data.candidates[0].content?.parts?.[0]?.text || "";
       } else if (data.contents && data.contents.length > 0) {
-        responseText = data.contents[0].parts[0]?.text || "Resposta vazia";
-      } else {
-        throw new Error("Estrutura da resposta inesperada");
+        responseText = data.contents[0].parts?.[0]?.text || "";
+      } else if (data.raw) {
+        // tentar extrair do raw quando presente
+        if (data.raw.candidates && data.raw.candidates.length > 0) {
+          responseText = data.raw.candidates[0].content?.parts?.[0]?.text || "";
+        } else if (data.raw.contents && data.raw.contents.length > 0) {
+          responseText = data.raw.contents[0].parts?.[0]?.text || "";
+        }
       }
 
-      if (!responseText || responseText === "Resposta vazia") {
-        throw new Error("A API retornou uma resposta vazia");
+      if (!responseText) {
+        throw new Error("A API retornou uma resposta vazia ou inesperada");
       }
 
       // Adiciona resposta da IA

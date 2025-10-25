@@ -42,14 +42,12 @@ INSTRUÇÕES IMPORTANTES:
 
 Pergunta: ${message}`;
 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
     const resp = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // usa Authorization Bearer para não expor a chave na URL
-        Authorization: `Bearer ${process.env.GEMINI_API_KEY}`,
       },
       body: JSON.stringify({
         contents: [
