@@ -1,9 +1,12 @@
 .muv-header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 1000;
+  left: 0;
+  right: 0;
+  z-index: 1100;
   width: 100%;
-  background: rgba(10, 10, 10, 0.85);
+  height: 64px;
+  background: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
@@ -16,7 +19,7 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 12px 20px;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -119,28 +122,49 @@
 
 /* responsividade: em telas pequenas o nav passa a flow normal (sem absolute) */
 @media (max-width: 840px) {
-  .centerNav {
-    position: static;
-    transform: none;
-    margin-left: 8px;
-    order: 3;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  /* mobile layout: header fills top, nav flows under logo and socials */
+  .muv-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 8px 0;
   }
+
   .container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
     gap: 8px;
-    padding: 10px 14px;
+  }
+
+  .left {
+    order: 1;
   }
   .logoImg {
     height: 34px;
   }
+
+  .centerNav {
+    position: static;
+    transform: none;
+    order: 2;
+    width: 100%;
+    margin-top: 8px;
+    display: flex;
+    justify-content: center;
+  }
+
   .nav {
     gap: 12px;
     flex-wrap: wrap;
     justify-content: center;
   }
+
   .right {
+    order: 3;
     gap: 8px;
   }
 }
