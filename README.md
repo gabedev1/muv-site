@@ -54,13 +54,42 @@ Projeto front-end em Next.js que apresenta o trabalho do MUV (feira de ciências
 
 ## Variáveis de ambiente (chat/IA)
 
-Se a página de chat usa um serviço de IA (ex.: OpenAI) via rota de API/servidor, adicione as credenciais em `.env.local` na raiz do projeto. Exemplo:
+Este projeto utiliza uma rota serverless (`/api/gemini`) que faz a ponte entre o front-end e a Generative Language API (Gemini). Por segurança, a chave da API deve ser mantida apenas no servidor (variáveis de ambiente) — nunca a exponha no client.
+
+1. Variável local (desenvolvimento)
+
+Crie um arquivo `.env.local` na raiz do projeto com a sua chave (NÃO comite este arquivo):
 
 ```
-OPENAI_API_KEY=sk-...
+GEMINI_API_KEY=Sua_Chave_De_API_Aqui
 ```
 
-- Se você expor alguma chave no front-end, use prefixos adequados (ex.: NEXT*PUBLIC*) apenas quando intencional. Ideal: chamadas à API com chave em backend (API routes / server functions).
+Em seguida reinicie o servidor de desenvolvimento:
+
+```powershell
+npm run dev
+```
+
+2. Configurar no Vercel (produção)
+
+No painel do Vercel (Dashboard) do seu projeto:
+
+- Acesse Settings → Environment Variables
+- Clique em "Add" e crie a variável `GEMINI_API_KEY` com o valor da sua chave
+- Escolha os ambientes (Preview / Production) e salve
+
+Ou via CLI (opcional):
+
+```bash
+vercel env add GEMINI_API_KEY production
+```
+
+Boas práticas e observações
+
+- Nunca inclua a chave no código-fonte ou em arquivos com commit público.
+- Para chamadas server-side ao endpoint do Generative Language API é comum usar a chave como query param `?key=...` quando a requisição é feita pelo servidor — dessa forma a chave não fica disponível ao cliente.
+- Se preferir um fluxo por OAuth/service account (mais seguro), posso ajudar a implementar esse método (requer criar uma service account no Google Cloud e configurar as credenciais no Vercel).
+- Ao usar variáveis no Next.js, coloque apenas nomes sem o prefixo `NEXT_PUBLIC_` para manter as chaves no servidor; use `NEXT_PUBLIC_` somente para valores que podem ser expostos ao cliente.
 
 ## Dicas comuns
 
