@@ -116,4 +116,4 @@ Deploy recomendado: Vercel (suporte nativo a Next.js). Configure variáveis de a
 
 ## Licença & Créditos
 
-Projeto criado para demonstração do grupo (feira de ciências). Use e modifique conforme necessidade — adicione uma licença no repositório quando desejar compartilhar publicamente.
+Projeto criado para demonstração do grupo (feira de ciências). Use e modifique conforme necessidade
