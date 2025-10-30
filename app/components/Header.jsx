@@ -57,28 +57,7 @@ export default function Header() {
 
         {/* right: redes sociais */}
         <div className={styles.right}>
-          <a
-            href="https://www.instagram.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram"
-            className={styles.social}
-          >
             {/* simples ícone SVG */}
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden
-            >
-              <path
-                d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm5 6.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm4.8-.9a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"
-                fill="currentColor"
-              />
-            </svg>
-          </a>
-
           <a
             href="https://github.com/gabedev1"
             target="_blank"
