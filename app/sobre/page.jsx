@@ -14,7 +14,7 @@ export default function Sobre() {
 
   return (
     <main className={styles.sobreContainer}>
-      <Header />
+      <Header transparent/>
       <div className={styles.sobreContent}>
         <div className={styles.sobreCard}>
           <h1 className={styles.sobreTitle}>Sobre Nós</h1>

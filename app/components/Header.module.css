@@ -15,6 +15,20 @@
     border-color 220ms ease;
 }
 
+/* transparent variant for specific pages */
+.transparent {
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  box-shadow: none;
+}
+
+/* ao rolar, fica mais sólido e discreto */
+.scrolled {
+  background: rgba(12, 12, 14, 0.96);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
 /* container agora em linha com contexto relativo para centralizar nav */
 .container {
   max-width: 1200px;
@@ -79,6 +93,22 @@
   border-radius: 8px;
   transition: color 160ms ease, background-color 160ms ease,
     transform 140ms ease;
+  position: relative;
+}
+
+/* sublinhado animado */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 4px;
+  height: 2px;
+  background: linear-gradient(90deg, #8b3be0, #d96bff);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms ease;
 }
 
 /* estado ativo */
@@ -86,6 +116,10 @@
   background: rgba(139, 59, 224, 0.12);
   color: #fff;
   box-shadow: 0 6px 18px rgba(91, 43, 176, 0.08);
+}
+.active::after,
+.nav-link:hover::after {
+  transform: scaleX(1);
 }
 
 /* hover dos links */
@@ -120,9 +154,47 @@
   color: #fff;
 }
 
-/* responsividade: em telas pequenas o nav passa a flow normal (sem absolute) */
+/* botão hamburger (mobile) */
+.menuButton {
+  display: none;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.9);
+}
+.menuButton:focus-visible {
+  outline: 2px solid #a880ff;
+  outline-offset: 2px;
+}
+.menuIcon {
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  position: relative;
+  display: inline-block;
+}
+.menuIcon::before,
+.menuIcon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+}
+.menuIcon::before {
+  top: -6px;
+}
+.menuIcon::after {
+  top: 6px;
+}
+
+/* responsividade */
 @media (max-width: 840px) {
-  /* mobile layout: header fills top, nav flows under logo and socials */
+  /* header */
   .muv-header {
     position: sticky;
     top: 0;
@@ -140,31 +212,49 @@
     gap: 8px;
   }
 
-  .left {
-    order: 1;
-  }
   .logoImg {
     height: 34px;
   }
 
-  .centerNav {
-    position: static;
-    transform: none;
-    order: 2;
-    width: 100%;
-    margin-top: 8px;
-    display: flex;
+  /* mostra o botão */
+  .menuButton {
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+  }
+
+  /* nav vira dropdown */
+  .centerNav {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    transform: none;
+    background: rgba(20, 20, 24, 0.96);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 10px 16px 14px;
+    display: none;
+  }
+
+  .navOpen {
+    display: block;
   }
 
   .nav {
     gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav-link {
+    padding: 12px 10px;
+    border-radius: 10px;
+    background: rgba(160, 80, 200, 0.06);
   }
 
   .right {
-    order: 3;
     gap: 8px;
   }
 }

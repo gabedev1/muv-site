@@ -3,16 +3,34 @@
 import styles from "./Header.module.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default function Header() {
+export default function Header({ transparent = false }) {
   const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const isActive = (path) => pathname === path;
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
   return (
-    <header className={styles["muv-header"]} role="banner">
+    <header
+      className={`${styles["muv-header"]} ${
+        transparent ? styles.transparent : ""
+      } ${scrolled ? styles.scrolled : ""}`}
+      role="banner"
+    >
       <div className={styles.container}>
-        <Header />
         {/* left: logo image */}
         <div className={styles.left}>
           <Link href="/" className={styles.logoLink}>
@@ -20,8 +38,24 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* center: nav (centralizado) */}
-        <nav className={styles.centerNav} role="navigation" aria-label="Main">
+        {/* mobile: botão hamburger */}
+        <button
+          className={styles.menuButton}
+          aria-label="Abrir navegação"
+          aria-controls="main-nav"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span className={styles.menuIcon} aria-hidden />
+        </button>
+
+        {/* center: nav */}
+        <nav
+          id="main-nav"
+          className={`${styles.centerNav} ${menuOpen ? styles.navOpen : ""}`}
+          role="navigation"
+          aria-label="Main"
+        >
           <ul className={styles.nav}>
             <li>
               <Link

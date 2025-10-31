@@ -6,7 +6,7 @@ import "./globals.css";
 export default function HomePage() {
   return (
     <div className={styles.page}>
-      <Header />
+      <Header transparent/>
 
       <main className={styles.hero}>
         <div className={styles.card}>

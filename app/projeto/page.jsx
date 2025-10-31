@@ -8,6 +8,7 @@ import styles from "./projeto.module.css";
 export default function AboutProject() {
   return (
     <main className={styles.container}>
+      <Header transparent/>
       <section className={styles.card}>
         <header className={styles.header}>
           <h1 className={styles.h1}>Sobre o Projeto</h1>

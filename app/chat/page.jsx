@@ -152,7 +152,7 @@ export default function ChatPage() {
     <div className={styles.chatWrap}>
       {/* Header fixo no topo */}
       <div className="fixed top-0 left-0 right-0 z-50">
-        <Header />
+        <Header transparent/>
       </div>
       
       {/* Conteúdo principal com padding para o header */}
