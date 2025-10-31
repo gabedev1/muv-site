@@ -188,7 +188,7 @@ export default function ChatPage() {
                 Bem-vindo ao Assistente de Estudos!
               </h2>
               <p className="text-lg mb-2 text-purple-500">
-                Faça uma pergunta sobre qualquer matéria e eu ajudarei você.
+                Faça uma pergunta sobre qualquer matéria e eu terá sua resposta.
               </p>
               <p className="text-purple-500 italic">
                 Exemplo: "Explique o que é fotossíntese"

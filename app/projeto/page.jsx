@@ -1,16 +1,21 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
+import Header from "../components/Header";
 import styles from "./projeto.module.css";
 
 export default function AboutProject() {
   return (
     <main className={styles.container}>
+      <div>
+        <Header/>
+      </div>
       <section className={styles.card}>
         <header className={styles.header}>
           <h1 className={styles.h1}>Sobre o Projeto</h1>
           <p className={styles.lead}>
-            Solução moderna e eficiente para divulgação de informações e
-            demonstração de integração com IA — criada com React e Next.js.
+            Solução moderna e eficiente para demonstração de integração com IA — criada com React e Next.js.
           </p>
         </header>
 
@@ -24,7 +29,7 @@ export default function AboutProject() {
               Promover interação e engajamento dos visitantes.
             </li>
             <li className={styles.li}>
-              Oferecer uma plataforma confiável e intuitiva.
+              Oferecer uma plataforma intuitiva e eficiente.
             </li>
           </ul>
         </article>
@@ -35,7 +40,7 @@ export default function AboutProject() {
             <li className={styles.tech}>React</li>
             <li className={styles.tech}>Next.js</li>
             <li className={styles.tech}>JavaScript</li>
-            <li className={styles.tech}>CSS Modules</li>
+            <li className={styles.tech}>Tailwind</li>
           </ul>
         </article>
 
