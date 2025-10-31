@@ -12,7 +12,7 @@ export default function Header() {
   return (
     <header className={styles["muv-header"]} role="banner">
       <div className={styles.container}>
-        <Header/>
+        <Header />
         {/* left: logo image */}
         <div className={styles.left}>
           <Link href="/" className={styles.logoLink}>
