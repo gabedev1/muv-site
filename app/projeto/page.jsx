@@ -1,16 +1,10 @@
-"use client";
-
 import Link from "next/link";
 import React from "react";
-import Header from "../components/Header";
 import styles from "./projeto.module.css";
 
 export default function AboutProject() {
   return (
     <main className={styles.container}>
-      <div>
-        <Header/>
-      </div>
       <section className={styles.card}>
         <header className={styles.header}>
           <h1 className={styles.h1}>Sobre o Projeto</h1>

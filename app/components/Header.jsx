@@ -60,7 +60,7 @@ export default function Header() {
         <div className={styles.right}>
           {/* simples ícone SVG */}
           <a
-            href="https://github.com/gabedev1"
+            href="https://github.com/gabedev1/muv-site"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"
