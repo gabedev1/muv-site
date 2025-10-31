@@ -47,8 +47,7 @@ export default function AboutProject() {
         <footer className={styles.footer}>
           <p className={styles.p}>
             Esperamos que este projeto inspire a comunidade e mostre como IA
-            pode melhorar a experiência de aprendizagem e demonstração em feiras
-            de ciências.
+            pode melhorar a experiência de aprendizagem.
           </p>
           <Link href="/" className={styles.cta}>
             Voltar à Página Inicial
