@@ -256,3 +256,235 @@
     animation: none;
   }
 }
+
+/* Modal overlay (fundo escuro com blur) */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(8, 6, 12, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+  animation: fadeIn 200ms ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal content (card centralizado) */
+.modalContent {
+  background: linear-gradient(
+    180deg,
+    rgba(20, 6, 40, 0.98),
+    rgba(12, 6, 24, 0.98)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+  position: relative;
+  animation: slideUp 300ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Botão fechar */
+.modalClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 24px;
+  line-height: 1;
+  transition: background 180ms ease, transform 140ms ease;
+  z-index: 10;
+}
+
+.modalClose:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: scale(1.1);
+}
+
+.modalClose:active {
+  transform: scale(0.95);
+}
+
+/* Header do modal */
+.modalHeader {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.modalTitle {
+  margin: 0 0 8px 0;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.modalRole {
+  margin: 0;
+  color: rgba(228, 92, 255, 0.9);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* Body do modal */
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Seção de informações (nome, turma, turno) */
+.modalInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.infoRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  background: rgba(139, 59, 224, 0.08);
+  border-radius: 10px;
+  border: 1px solid rgba(139, 59, 224, 0.15);
+}
+
+.infoLabel {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.infoValue {
+  font-size: 1.05rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Seção de explicação */
+.modalExplanation {
+  padding: 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.01)
+  );
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.explanationTitle {
+  margin: 0 0 12px 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #f7f3ff;
+  letter-spacing: -0.01em;
+}
+
+.explanationText {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  font-size: 0.98rem;
+}
+
+/* Responsividade do modal */
+@media (max-width: 640px) {
+  .modalContent {
+    padding: 24px 20px;
+    max-width: 100%;
+    margin: 20px;
+  }
+
+  .modalTitle {
+    font-size: 1.6rem;
+  }
+
+  .modalRole {
+    font-size: 0.95rem;
+  }
+
+  .infoRow {
+    padding: 12px 14px;
+  }
+
+  .infoLabel {
+    font-size: 0.85rem;
+  }
+
+  .infoValue {
+    font-size: 1rem;
+  }
+
+  .explanationTitle {
+    font-size: 1.05rem;
+  }
+
+  .explanationText {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+}
+
+/* Scrollbar personalizada para o modal */
+.modalContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modalContent::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+
+.modalContent::-webkit-scrollbar-thumb {
+  background: rgba(139, 59, 224, 0.4);
+  border-radius: 4px;
+}
+
+.modalContent::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 59, 224, 0.6);
+}

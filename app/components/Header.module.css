@@ -7,8 +7,8 @@
   width: 100%;
   height: 64px;
   background: rgba(10, 10, 10, 0.95);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow: 0 8px 28px rgba(68, 0, 88, 0.45);
   transition: background-color 220ms ease, box-shadow 220ms ease,

@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   padding: 110px 20px; /* alinhar com home .hero */
-  background-image: url(/Imagem-Fundo-1.png);
+  background-image: url(/fundo-novo.png);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -13,6 +13,25 @@
   color: #fff;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial;
+    position: relative;
+    overflow: hidden;
+}
+
+.container::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url(/fundo-novo.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(1px);
+  -webkit-filter: blur(2px);
+  z-index: -1;
+  transform: scale(1.1);
 }
 
 /* central card */
