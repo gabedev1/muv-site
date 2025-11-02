@@ -2,8 +2,11 @@
 
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 import Header from "../components/Header";
 import styles from "./chat.module.css";
+import "highlight.js/styles/github-dark.css";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
@@ -25,10 +28,8 @@ export default function ChatPage() {
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = Math.min(
-        textareaRef.current.scrollHeight,
-        120
-      ) + "px";
+      textareaRef.current.style.height =
+        Math.min(textareaRef.current.scrollHeight, 120) + "px";
     }
   }, [input]);
 
@@ -47,9 +48,9 @@ export default function ChatPage() {
         id: Date.now(),
         role: "user",
         content: userMessage,
-        timestamp: new Date().toLocaleTimeString("pt-BR", { 
-          hour: '2-digit', 
-          minute: '2-digit' 
+        timestamp: new Date().toLocaleTimeString("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit",
         }),
       },
     ]);
@@ -116,9 +117,9 @@ export default function ChatPage() {
           id: Date.now() + 1,
           role: "assistant",
           content: responseText,
-          timestamp: new Date().toLocaleTimeString("pt-BR", { 
-            hour: '2-digit', 
-            minute: '2-digit' 
+          timestamp: new Date().toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
           }),
         },
       ]);
@@ -132,9 +133,9 @@ export default function ChatPage() {
           id: Date.now() + 1,
           role: "error",
           content: `Erro: ${err.message}`,
-          timestamp: new Date().toLocaleTimeString("pt-BR", { 
-            hour: '2-digit', 
-            minute: '2-digit' 
+          timestamp: new Date().toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
           }),
         },
       ]);
@@ -152,12 +153,11 @@ export default function ChatPage() {
     <div className={styles.chatWrap}>
       {/* Header fixo no topo */}
       <div className="fixed top-0 left-0 right-0 z-50">
-        <Header transparent/>
+        <Header transparent />
       </div>
-      
+
       {/* Conteúdo principal com padding para o header */}
       <div className="w-full max-w-4xl mx-auto h-screen flex flex-col pt-20 px-4 sm:px-6 lg:px-8">
-        
         {/* Título e botão limpar */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mb-6">
           <div className="text-center sm:text-left">
@@ -168,7 +168,7 @@ export default function ChatPage() {
               Faça perguntas sobre qualquer matéria e receba ajuda instantânea
             </p>
           </div>
-          
+
           {messages.length > 0 && (
             <button
               onClick={clearChat}
@@ -180,7 +180,9 @@ export default function ChatPage() {
         </div>
 
         {/* Área de Mensagens - Ocupa espaço restante */}
-        <div className={`${styles.messagesArea} flex-1 mb-4 rounded-xl shadow-2xl`}>
+        <div
+          className={`${styles.messagesArea} flex-1 mb-4 rounded-xl shadow-2xl`}
+        >
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-white text-center p-8">
               <div className="text-6xl mb-6">🎓</div>
@@ -226,68 +228,136 @@ export default function ChatPage() {
                     </div>
 
                     {message.role === "assistant" ? (
-                      <div className="prose prose-sm max-w-none">
+                      <div className="prose prose-sm max-w-none prose-invert">
                         <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          rehypePlugins={[rehypeHighlight]}
                           components={{
                             h1: ({ node, ...props }) => (
                               <h1
-                                className="text-white/80 text-lg font-bold mt-3 mb-2"
+                                className="text-white text-2xl font-bold mt-6 mb-4 pb-2 border-b border-white/20"
                                 {...props}
                               />
                             ),
                             h2: ({ node, ...props }) => (
                               <h2
-                                className="text-white/90 text-md font-bold mt-2 mb-1"
+                                className="text-white text-xl font-bold mt-5 mb-3 pb-2 border-b border-white/20"
                                 {...props}
                               />
                             ),
                             h3: ({ node, ...props }) => (
                               <h3
-                                className="text-white text-sm font-bold mt-2 mb-1"
+                                className="text-white text-lg font-bold mt-4 mb-2"
+                                {...props}
+                              />
+                            ),
+                            h4: ({ node, ...props }) => (
+                              <h4
+                                className="text-white/95 text-base font-bold mt-3 mb-2"
                                 {...props}
                               />
                             ),
                             p: ({ node, ...props }) => (
-                              <p className="mb-2 leading-relaxed text-white/90" {...props} />
+                              <p
+                                className="mb-4 leading-relaxed text-white/95"
+                                {...props}
+                              />
                             ),
                             ul: ({ node, ...props }) => (
                               <ul
-                                className="list-disc list-inside mb-2 space-y-1 text-white/90"
+                                className="list-disc list-outside mb-4 ml-4 space-y-2 text-white/95"
                                 {...props}
                               />
                             ),
                             ol: ({ node, ...props }) => (
                               <ol
-                                className="list-decimal list-inside mb-2 space-y-1 text-white/90"
+                                className="list-decimal list-outside mb-4 ml-4 space-y-2 text-white/95"
                                 {...props}
                               />
                             ),
                             li: ({ node, ...props }) => (
-                              <li className="text-white-200" {...props} />
+                              <li
+                                className="text-white/95 leading-relaxed"
+                                {...props}
+                              />
                             ),
                             strong: ({ node, ...props }) => (
-                              <strong className="font-bold text-purple-800" {...props} />
+                              <strong
+                                className="font-bold text-white"
+                                {...props}
+                              />
                             ),
                             em: ({ node, ...props }) => (
-                              <em className="italic text-white-200" {...props} />
+                              <em className="italic text-white/95" {...props} />
                             ),
                             code: ({ node, inline, ...props }) =>
                               inline ? (
                                 <code
-                                  className="bg-purple-400 px-1 py-0.5 rounded text-xs font-mono text-white"
+                                  className="bg-white/10 px-2 py-0.5 rounded text-sm font-mono text-purple-200 border border-white/10"
                                   {...props}
                                 />
                               ) : (
-                                <code
-                                  className="block bg-purple-500 p-2 rounded text-xs font-mono text-white overflow-x-auto my-2"
-                                  {...props}
-                                />
+                                <pre className="my-4 overflow-x-auto">
+                                  <code
+                                    className="block bg-black p-4 rounded-lg text-sm font-mono overflow-x-auto border border-white/10"
+                                    {...props}
+                                  />
+                                </pre>
                               ),
-                            blockquote: ({ node, ...props }) => (
-                              <blockquote
-                                className="bg-black-10 border-l-4 border-purple-400 pl-3 italic text-purple-500 my-2 py-1"
+                            pre: ({ node, ...props }) => (
+                              <pre
+                                className="my-4 overflow-x-auto"
                                 {...props}
                               />
+                            ),
+                            blockquote: ({ node, ...props }) => (
+                              <blockquote
+                                className="border-l-4 border-purple-500 bg-purple-500/10 pl-4 py-2 my-4 italic text-white/90 rounded-r"
+                                {...props}
+                              />
+                            ),
+                            a: ({ node, ...props }) => (
+                              <a
+                                className="text-purple-300 hover:text-purple-200 underline underline-offset-2 transition-colors"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                {...props}
+                              />
+                            ),
+                            table: ({ node, ...props }) => (
+                              <div className="overflow-x-auto my-4">
+                                <table
+                                  className="min-w-full border-collapse border border-white/20 rounded-lg"
+                                  {...props}
+                                />
+                              </div>
+                            ),
+                            thead: ({ node, ...props }) => (
+                              <thead className="bg-white/10" {...props} />
+                            ),
+                            tbody: ({ node, ...props }) => (
+                              <tbody
+                                className="divide-y divide-white/10"
+                                {...props}
+                              />
+                            ),
+                            tr: ({ node, ...props }) => (
+                              <tr className="hover:bg-white/5" {...props} />
+                            ),
+                            th: ({ node, ...props }) => (
+                              <th
+                                className="px-4 py-3 text-left font-bold text-white/90 border border-white/20"
+                                {...props}
+                              />
+                            ),
+                            td: ({ node, ...props }) => (
+                              <td
+                                className="px-4 py-3 text-white/90 border border-white/20"
+                                {...props}
+                              />
+                            ),
+                            hr: ({ node, ...props }) => (
+                              <hr className="my-6 border-white/20" {...props} />
                             ),
                           }}
                         >
@@ -295,7 +365,9 @@ export default function ChatPage() {
                         </ReactMarkdown>
                       </div>
                     ) : (
-                      <p className="whitespace-pre-wrap text-white-400">{message.content}</p>
+                      <p className="whitespace-pre-wrap text-white/95">
+                        {message.content}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -303,12 +375,20 @@ export default function ChatPage() {
 
               {loading && (
                 <div className="flex justify-start">
-                  <div className={`${styles.msg} ${styles.assistant} max-w-[85%] sm:max-w-[75%]`}>
+                  <div
+                    className={`${styles.msg} ${styles.assistant} max-w-[85%] sm:max-w-[75%]`}
+                  >
                     <div className="flex items-center space-x-2">
                       <div className="flex space-x-1">
                         <div className="w-2 h-2 bg-white-60 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-white-60 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                        <div className="w-2 h-2 bg-white-60 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                        <div
+                          className="w-2 h-2 bg-white-60 rounded-full animate-bounce"
+                          style={{ animationDelay: "0.1s" }}
+                        ></div>
+                        <div
+                          className="w-2 h-2 bg-white-60 rounded-full animate-bounce"
+                          style={{ animationDelay: "0.2s" }}
+                        ></div>
                       </div>
                       <span className="text-purple-600">
                         Assistente está digitando...

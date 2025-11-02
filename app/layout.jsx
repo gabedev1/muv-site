@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Fira_Sans, Alfa_Slab_One } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 
 const fira = Fira_Sans({
   subsets: ["latin"],
