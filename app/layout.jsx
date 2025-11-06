@@ -19,6 +19,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR" className={`${fira.variable} ${alfa.variable}`}>
       <body>{children}</body>
+      <Analytics />
     </html>
   );
 }

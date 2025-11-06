@@ -2,11 +2,12 @@ import Link from "next/link";
 import Header from "./components/Header";
 import styles from "./style/page.module.css";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 export default function HomePage() {
   return (
     <div className={styles.page}>
-      <Header transparent/>
+      <Header transparent />
 
       <main className={styles.hero}>
         <div className={styles.card}>
@@ -46,6 +47,7 @@ export default function HomePage() {
           </div>
         </div>
       </main>
+      <Analytics />
     </div>
   );
 }
