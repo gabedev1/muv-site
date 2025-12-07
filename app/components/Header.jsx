@@ -87,6 +87,16 @@ export default function Header({ transparent = false }) {
                 Grupo
               </Link>
             </li>
+            <li>
+              <Link
+                href="/chat"
+                className={`${styles["nav-link"]} ${
+                  isActive("/chat") ? styles.active : ""
+                }`}
+              >
+                Chat
+              </Link>
+            </li>
           </ul>
         </nav>
 
